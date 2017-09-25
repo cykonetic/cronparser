@@ -50,36 +50,36 @@ echo "Debug:<br>" . nl2br($cron->getDebug());
 class CronParser
 {
 
- 	var $bits = Array(); //exploded String like 0 1 * * *
- 	var $now = Array();	//Array of cron-style entries for time()
- 	var $lastRan; 		//Timestamp of last ran time.
- 	var $taken;
- 	var $debug;
-	var $year;
-	var $month;
-	var $day;
-	var $hour;
-	var $minute;
-	var $minutes_arr = array();	//minutes array based on cron string
-	var $hours_arr = array();	//hours array based on cron string
-	var $months_arr = array();	//months array based on cron string
+ 	private $bits = Array(); //exploded String like 0 1 * * *
+ 	private $now = Array();	//Array of cron-style entries for time()
+ 	private $lastRan; 		//Timestamp of last ran time.
+ 	private $taken;
+ 	private $debug;
+	private $year;
+	private $month;
+	private $day;
+	private $hour;
+	private $minute;
+	private $minutes_arr = array();	//minutes array based on cron string
+	private $hours_arr = array();	//hours array based on cron string
+	private $months_arr = array();	//months array based on cron string
 
-	function getLastRan()
+	public function getLastRan()
 	{
 		return explode(",", strftime("%M,%H,%d,%m,%w,%Y", $this->lastRan)); //Get the values for now in a format we can use
 	}
 
-	function getLastRanUnix()
+	public function getLastRanUnix()
 	{
 		return $this->lastRan;
 	}
 
-	function getDebug()
+	public function getDebug()
 	{
  		return $this->debug;
 	}
 
-	function debug($str)
+	public function debug($str)
 	{
 		if (is_array($str))
 		{
@@ -101,7 +101,7 @@ class CronParser
 	 * Assumes that value is not *, and creates an array of valid numbers that
 	 * the string represents.  Returns an array.
 	 */
-	function expand_ranges($str)
+	public function expand_ranges($str)
 	{
 		if (strstr($str,  ","))
 		{
@@ -139,7 +139,7 @@ class CronParser
 		return $ret;
 	}
 
-	function daysinmonth($month, $year)
+	public function daysinmonth($month, $year)
 	{
 		return date('t', mktime(0, 0, 0, $month, 1, $year));
 	}
@@ -147,7 +147,7 @@ class CronParser
 	/**
 	 *  Calculate the last due time before this moment
 	 */
-	function calcLastRan($string)
+	public function calcLastRan($string)
 	{
 
  		$tstart = microtime();
@@ -299,7 +299,7 @@ class CronParser
 	}
 
 	//get the due time before current month
-	function _prevMonth($arMonths)
+	private function _prevMonth($arMonths)
 	{
 		$this->month = array_pop($arMonths);
 		if ($this->month === NULL)
@@ -336,7 +336,7 @@ class CronParser
 	}
 
 	//get the due time before current day
-	function _prevDay($arDays, $arMonths)
+	private function _prevDay($arDays, $arMonths)
 	{
 		$this->debug("Go for the previous day");
 		$this->day = array_pop($arDays);
@@ -353,7 +353,7 @@ class CronParser
 	}
 
 	//get the due time before current hour
-	function _prevHour($arHours, $arDays, $arMonths)
+	private function _prevHour($arHours, $arDays, $arMonths)
 	{
 		$this->debug("Going for previous hour");
 		$this->hour = array_pop($arHours);
@@ -369,7 +369,7 @@ class CronParser
 	}
 
 	//not used at the moment
-	function _getLastMonth()
+	private function _getLastMonth()
 	{
 		$months = $this->_getMonthsArray();
 		$month = array_pop($months);
@@ -377,7 +377,7 @@ class CronParser
 		return $month;
 	}
 
-	function _getLastDay($month, $year)
+	private function _getLastDay($month, $year)
 	{
 		//put the available days for that month into an array
 		$days = $this->_getDaysArray($month, $year);
@@ -386,7 +386,7 @@ class CronParser
 		return $day;
 	}
 
-	function _getLastHour()
+	private function _getLastHour()
 	{
 		$hours = $this->_getHoursArray();
 		$hour = array_pop($hours);
@@ -394,7 +394,7 @@ class CronParser
 		return $hour;
 	}
 
-	function _getLastMinute()
+	private function _getLastMinute()
 	{
 		$minutes = $this->_getMinutesArray();
 		$minute = array_pop($minutes);
@@ -403,7 +403,7 @@ class CronParser
 	}
 
 	//remove the out of range array elements. $arr should be sorted already and does not contain duplicates
-	function _sanitize ($arr, $low, $high)
+	private function _sanitize ($arr, $low, $high)
 	{
 		$count = count($arr);
 		for ($i = 0; $i <= ($count - 1); $i++)
@@ -438,7 +438,7 @@ class CronParser
 	}
 
 	//given a month/year, list all the days within that month fell into the week days list.
-	function _getDaysArray($month, $year = 0)
+	private function _getDaysArray($month, $year = 0)
 	{
 		if ($year == 0)
 		{
@@ -513,7 +513,7 @@ class CronParser
 	}
 
 	//given a month/year, return an array containing all the days in that month
-	function getDays($month, $year)
+	private function getDays($month, $year)
 	{
 		$daysinmonth = $this->daysinmonth($month, $year);
 		$this->debug("Number of days in $year-$month : $daysinmonth");
@@ -525,7 +525,7 @@ class CronParser
 		return $days;
 	}
 
-	function _getHoursArray()
+	private function _getHoursArray()
 	{
 		if (empty($this->hours_arr))
 		{
@@ -551,7 +551,7 @@ class CronParser
 		return $this->hours_arr;
 	}
 
-	function _getMinutesArray()
+	private function _getMinutesArray()
 	{
 		if (empty($this->minutes_arr))
 		{
@@ -576,7 +576,7 @@ class CronParser
 		return $this->minutes_arr;
 	}
 
-	function _getMonthsArray()
+	private function _getMonthsArray()
 	{
 		if (empty($this->months_arr))
 		{
