@@ -1,0 +1,13 @@
+{
+    "name": "nicholaibush/cronparser",
+    "description": "reviving abandoned class for php7 compliance",
+    "type": "library",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Nicholai Bush",
+            "email": "nicholaibush@yahoo.com"
+        }
+    ],
+    "require": {}
+}
